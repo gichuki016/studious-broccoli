@@ -1,5 +1,6 @@
 <?php
-
+require_once "Utils.php";
+session_start();
 function getHeader()
 {
     echo '<!DOCTYPE html>
@@ -109,16 +110,25 @@ function getHeader()
 
 ';
 }
-
+function requiresLogin(){
+    if (!isset($_SESSION["username"])|| !isset($_SESSION["email"])){
+        session_destroy();
+        header('location: /login');
+        exit();
+    }
+}
+function endHeader(){
+    echo ' </header>';
+}
 function getNavBar()
 {
     echo '
      <!--Main Navigation-->
-  <header>
 
+<header>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
       <div class="container">
-        <a class="navbar-brand" href="#"><strong>MDB</strong></a>
+        <a class="navbar-brand" href="#"><strong></strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-7"
           aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -126,13 +136,13 @@ function getNavBar()
         <div class="collapse navbar-collapse" id="navbarSupportedContent-7">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
+              <a class="nav-link" href="">Link</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
+              <a class="nav-link" href="/profile">Profile</a>
             </li>
           </ul>
           <form class="form-inline">
@@ -155,7 +165,7 @@ function getRegistrationForm(){
         <div class="container">
           <div class="row">
             <div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5">
-<form id="login" method="post" action="../../views/layout/Utils.php">
+<form id="login" method="post" action="../../views/layout/Utils.php" class="needs-validation">
               <!--Form with header-->
               <div class="card wow fadeIn" data-wow-delay="0.3s">
                 <div class="card-body">
@@ -170,6 +180,16 @@ function getRegistrationForm(){
                     <i class="fas fa-user prefix white-text"></i>
                     <input type="text" id="orangeForm-name" class="form-control" name="name">
                     <label for="orangeForm-name">Your name</label>
+                  </div>
+                   <div class="md-form">
+                    <i class="fas fa-user prefix white-text"></i>
+                    <input type="text"  class="form-control" name="first_name">
+                    <label for="orangeForm-name">First name</label>
+                  </div> 
+                  <div class="md-form">
+                    <i class="fas fa-user prefix white-text"></i>
+                    <input type="text"  class="form-control" name="last_name">
+                    <label for="orangeForm-name">Last name</label>
                   </div>
                   <div class="md-form">
                     <i class="fas fa-envelope prefix white-text"></i>
@@ -209,7 +229,58 @@ function getFoorter()
     echo '
 
 
-  </header>
+  
+  
+    <!-- Footer -->
+    <footer class="page-footer pt-4 mt-4 indigo text-center text-md-left">
+
+        <!-- Footer Links -->
+        <div class="container">
+            <div class="row">
+
+                <!-- First column -->
+                <div class="col-md-6">
+                    <h6 class="text-uppercase font-weight-bold">Footer Content</h6>
+                    <p>Here you can use rows and columns here to organize your footer content.</p>
+                </div>
+                <!-- First column -->
+
+                <!-- Second column -->
+                <div class="col-md-3">
+                    <h6 class="text-uppercase font-weight-bold">Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#!">Link 1</a></li>
+                        <li><a href="#!">Link 2</a></li>
+                        <li><a href="#!">Link 3</a></li>
+                    </ul>
+                </div>
+                <!-- Second column -->
+
+                <!-- Third column -->
+                <div class="col-md-3">
+                    <h6 class="text-uppercase font-weight-bold">Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#!">Link 1</a></li>
+                        <li><a href="#!">Link 2</a></li>
+                        <li><a href="#!">Link 3</a></li>
+                    </ul>
+                </div>
+                <!-- Third column -->
+            </div>
+        </div>
+        <!-- Footer Links -->
+
+        <!-- Copyright -->
+        <div class="footer-copyright py-3 text-center">
+            <div class="container-fluid">
+                &copy; 2021 Copyright: <a href="https://premiumwriters.top/"> Moffat</a>
+
+            </div>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
 <!--  SCRIPTS  -->
   <!-- JQuery -->
   <script type="text/javascript" src="/assets/js/jquery.js"></script>
@@ -224,17 +295,35 @@ function getFoorter()
     $(\'#navId a\').click(e => {
     		e . preventDefault();
     		$(this) . tab(\'show\');
-    	});
-
+    	});</script>';
+    echo "
+<script>
+ (function () {
+                'use strict';
+                window.addEventListener('load', function () {
+                    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                    var forms = document.getElementsByClassName('needs-validation');
+                    // Loop over them and prevent submission
+                    var validation = Array.prototype.filter.call(forms, function (form) {
+                        form.addEventListener('submit', function (event) {
+                            if (form.checkValidity() === false) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                            form.classList.add('was-validated');
+                        }, false);
+                    });
+                }, false);
+            })();
   </script>
 <!-- Optional JavaScript -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js\"
+        integrity=\"sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1\"
+        crossorigin=\"anonymous\"></script>
         
 </body>
 </html>
-';
+";
 
 }

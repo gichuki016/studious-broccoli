@@ -8,7 +8,7 @@ getNavBar();
         <div class="container">
             <div class="row">
                 <div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5">
-                    <form id="login" method="post" action="/views/layout/Utils.php">
+                    <form id="login" method="post" action="/views/layout/Utils.php" class="needs-validation">
                         <!--Form with header-->
                         <div class="card wow fadeIn" data-wow-delay="0.3s">
                             <div class="card-body">
@@ -19,14 +19,20 @@ getNavBar();
                                 </div>
                                 <div class="md-form">
                                     <i class="fas fa-envelope prefix white-text"></i>
-                                    <input type="text" id="orangeForm-email" name="email" class="form-control">
+                                    <input type="text" id="orangeForm-email" name="email" class="form-control" required>
                                     <label for="orangeForm-email">Your email</label>
+                                    <div class="invalid-feedback">
+                                        We need your email.
+                                    </div>
                                 </div>
 
                                 <div class="md-form">
                                     <i class="fas fa-lock prefix white-text"></i>
-                                    <input type="password" id="orangeForm-pass" name="password" class="form-control">
+                                    <input type="password" id="orangeForm-pass" name="password" class="form-control" required maxlength="16" minlength="8">
                                     <label for="orangeForm-pass">Your password</label>
+                                    <div class="invalid-feedback">
+                                        We need a password. 8-16 characters
+                                    </div>
                                 </div>
 
                                 <div class="text-center">

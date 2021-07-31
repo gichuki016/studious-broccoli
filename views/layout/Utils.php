@@ -1,4 +1,5 @@
 <?php
+
 if ($_POST) {
     require 'db_key.php';
     $conn = connect_db();
@@ -6,21 +7,24 @@ if ($_POST) {
         $username = $_POST['name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
         $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
 //sanitize your input
         $username = mysqli_real_escape_string($conn, $username);
         $email = mysqli_real_escape_string($conn, $email);
         $passwordHashed = mysqli_real_escape_string($conn, $passwordHashed);
 //check for existing record
-        $sql = "Select username From users Where username = '$username'";
-        $sql = $conn->query($sql) or die($conn->error);;
+        $sql = "Select username From users Where username = '$username' or email='$email'";
+        $sql = $conn->query($sql) or die($conn->error);
         $sql = $sql->fetch_assoc();
         if ($sql) {
-            header('location: login.php');
+            header('location: /login.php');
             exit();
         } else {
-            $sql = "Insert Into users (username, email, password) VALUES ('$username', '$email', '$passwordHashed')";
-            $sql = $conn->query($sql);
+            //Hust insert Plain password for now. Will Encrypt later
+            $sql = "Insert Into users (username, email, password,first_name,last_name) VALUES ('$username', '$email', '$password','$first_name','$last_name')";
+            $sql = $conn->query($sql) or die($conn->error);
             if ($sql) {
                 echo "Registration succesful. You may <a href= '/login.php'>login</a> now";
 //header('location: index.php');
@@ -37,22 +41,23 @@ if ($_POST) {
         if ($sql) {
 
             $sql = $sql->fetch_assoc();
-            echo ($sql["password"]."<br>");
-            echo ($passwordHashed);
-            if (password_verify($password, $sql['password'])) {
+            //just compare passwords kienyeji will compare with hash verifier in future
+
+            echo (strtoupper( $sql["password"])."<br>");
+            var_dump($email);
+            if (strtoupper($password)==strtoupper( $sql["password"])) {
                 session_start();
                 $_SESSION['email'] = $email;
-                echo 'You have successfully logged-in';
-                header('location: account.php');
+                $_SESSION['username'] = $sql["username"];
+                $_SESSION["first_name"]=$sql["first_name"];
+                $_SESSION["last_name"]=$sql["last_name"];
+                header('location: /profile');
             }
         } else {
             header('location: index.php');
             exit();
         }
     }
-} else {
-    header('location: index.php');
-    exit();
 }
 //header('location: index.php');
 ?>
